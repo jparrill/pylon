@@ -1,4 +1,4 @@
 pylon
 =====
 
-You must construct additional pylon!
+You must construct additional pylons!
