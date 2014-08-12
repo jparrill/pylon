@@ -1,11 +1,12 @@
 import ConfigParser
 import sys
 import logging
+import os
 from os.path import realpath
 from os.path import dirname
 from socket import socket
-import os
-from beacons import *
+from importlib import import_module
+from beacons import beacon
 
 class BeaconHandler(object):
     graphite_namespace = None
@@ -35,6 +36,7 @@ class BeaconHandler(object):
             self.hostname = socket.gethostname()
 
         self.graphite_log = config.get('Graphite', 'log_file')
+        self.loaded_beacons = config.get('Graphite', 'beacons')
 
     def logger(self):
         log_file = self.graphite_log
@@ -52,7 +54,7 @@ class BeaconHandler(object):
 
 
     def register(self, new_beacon):
-        class_name = new_beacon().__class__.__name__
+        class_name = new_beacon().__class__
         if class_name not in self.beacons:
             if isinstance(new_beacon(), beacon.Beacon):
                 self.beacons[class_name] = new_beacon
@@ -66,6 +68,11 @@ class BeaconHandler(object):
         #     sys.exit(1)
 
         # return sock
+
+    def beacon_loader(self, modules):
+        for module in modules.split(","):
+            mod = import_module('beacons.{}'.format(module.strip()))
+            self.register(mod.Service)
 
     def send_to_graphite(self, namespace, value):
         logging.debug(u'{}.{}.{}.{}: {}'.format(
@@ -96,6 +103,5 @@ class BeaconHandler(object):
 
 if __name__ == "__main__":
     handler = BeaconHandler()
-    handler.register(cpu.CPU)
-    handler.register(memory.Memory)
+    handler.beacon_loader(handler.loaded_beacons)
     handler.run()

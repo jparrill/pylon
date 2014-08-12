@@ -2,12 +2,12 @@ import psutil
 import os
 from .beacon import Beacon
 
-class CPU(Beacon):
+class Service(Beacon):
     '''
     This beacon is monitoring Cpu stuff
     Captain Obvious strikes!
     '''
-    name = "CPU"
+    #name = "Cpu"
     graphite_namespace = "cpu"
     expose = ['load_5', 'load_10', 'load_15', 'usage']
 

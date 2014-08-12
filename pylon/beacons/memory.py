@@ -1,12 +1,12 @@
 import psutil
 from .beacon import Beacon
 
-class Memory(Beacon):
+class Service(Beacon):
     '''
     This beacon is monitoring memory stuff
     Captain Obvious strikes, again!!
     '''
-    name = "Memory"
+    #name = "Memory"
     graphite_namespace = "memory"
     expose = ["percent", "used", "available", "total"]
 

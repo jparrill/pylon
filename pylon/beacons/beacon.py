@@ -1,5 +1,5 @@
 class Beacon(object):
-    name = ""
+    #name = ""
     graphite_namespace = ''
     expose = []
 
