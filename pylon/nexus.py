@@ -1,6 +1,7 @@
 import ConfigParser
 import sys
 import logging
+import time
 import os
 from os.path import realpath
 from os.path import dirname
@@ -9,16 +10,21 @@ from importlib import import_module
 from beacons import beacon
 
 class BeaconHandler(object):
+    '''
+    This Class will manage all beacons as a manager, register all beacons that
+    it is in config file and call all of them in a row.
+    (not async operations yet)
+    '''
     graphite_namespace = None
     beacons = {}
 
     def __init__(self):
         self.get_config()
         self.logger()
-        #self.graphite_namespace = graphite_namespace
-        #self.setup_graphite(graphite_config)
+        self.conn = self.setup_graphite()
 
     def get_config(self):
+        # Configuration catcher
         file_path = dirname(realpath(__file__))
         config = ConfigParser.RawConfigParser()
         try:
@@ -39,6 +45,7 @@ class BeaconHandler(object):
         self.loaded_beacons = config.get('Graphite', 'beacons')
 
     def logger(self):
+        # Logger function
         log_file = self.graphite_log
         logging.getLogger('').handlers = []
         if not os.path.exists(log_file):
@@ -54,54 +61,76 @@ class BeaconHandler(object):
 
 
     def register(self, new_beacon):
+        # Register a Beacon, like a plugin activation
         class_name = new_beacon().__class__
         if class_name not in self.beacons:
             if isinstance(new_beacon(), beacon.Beacon):
                 self.beacons[class_name] = new_beacon
 
-    def setup_graphite(self, graphite_config):
-        pass
-        # try:
-        #     sock = socket.connect(server, port)
-        # except:
-        #     print "Couldn't connect to %s on port %d" % (server, port)
-        #     sys.exit(1)
+    def setup_graphite(self):
+        # Connect with graphite server
+        try:
+            sock = socket.connect(self.server, self.port)
+        except:
+            print "Couldn't connect to {} on port {}".format(
+                self.server, self.port)
+            sys.exit(1)
 
-        # return sock
+        return sock
 
     def beacon_loader(self, modules):
+        # Dinamyc load of beacons
         for module in modules.split(","):
             mod = import_module('beacons.{}'.format(module.strip()))
             self.register(mod.Service)
 
-    def send_to_graphite(self, namespace, value):
-        logging.debug(u'{}.{}.{}.{}: {}'.format(
-            self.domain,
-            self.initiative,
-            self.hostname,
+    def send_to_graphite(self, namespace, value, timestamp):
+        # Log all data catched and send to graphite
+        logging.debug(u'{} {} {}'.format(
             namespace, 
-            value
+            value,
+            timestamp,
             )
         )
-        print u'{}.{}.{}.{}: {}'.format(
-            self.domain,
-            self.initiative,
-            self.hostname,
-            namespace, 
-            value
+        
+        # print u'{} {} {}'.format(
+        #     namespace, 
+        #     value,
+        #     timestamp,
+        #     )
+        self.conn.sendall ('{} {} {}'.format(
+            path,
+            value,
+            timestamp
             )
+        )
+
+
 
     def run(self):
+        # Get data from beacon to notify it to graphite
         for beacon_name,beacon_class in self.beacons.iteritems():
             beacon = beacon_class()
             for data in beacon.run():
+                timestamp = int(time.time())
+                path = u'{}.{}.{}.{}'.format(
+                    self.domain,
+                    self.initiative,
+                    self.hostname,
+                    data['graphite_namespace']
+                    )
                 self.send_to_graphite(
-                    data['graphite_namespace'],
-                    data['value']
+                    path,
+                    data['value'],
+                    timestamp,
                 )
+
+    def close_conn(self):
+        self.conn.close()
 
 
 if __name__ == "__main__":
     handler = BeaconHandler()
     handler.beacon_loader(handler.loaded_beacons)
     handler.run()
+    handler.close_conn()
