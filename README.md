@@ -8,12 +8,12 @@ Because I need an easy way to add some kind of information about all my nodes, s
 And you can make the Graphite tree as you want, following an structure that you will be able to show in Graphite.
 
 ## How it works
-For the moment, it is very VERY limited, only a script without daemon or something like that.
-
 You only must to configure the file probe.ini to specify the graphite server and beacons that you will to load...and execute nexus.py
 
+A simpleDaemon has been implemented but there are much work to do yet...
 ```sh
-python nexus.py
+python nexus.py --start
+python nexus.py --stop
 ```
 
 The name of beacon that you will to load, must be the filename
