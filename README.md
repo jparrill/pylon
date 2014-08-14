@@ -1,18 +1,18 @@
-pylon
+Pylon
 =====
-Pylon is a moduled colector of system metrics and all that you want to measure.
+Pylon is a moduled colector of system metrics and all that you want to measure, using Graphite as a Backend
 
 ## Why?
 Because I need an easy way to add some kind of information about all my nodes, starting with the system metrics, but here is the point...you can make your beacon to add any measure that you want...check logs, inodes of the system...is up you.
 
-And you can make the Graphite tree as you want following an structure.
+And you can make the Graphite tree as you want, following an structure that you will be able to show in Graphite.
 
 ## How it works
 For the moment, it is very VERY limited, only a script without daemon or something like that.
 
 You only must to configure the file probe.ini to specify the graphite server and beacons that you will to load...and execute nexus.py
 
-```python
+```sh
 python nexus.py
 ```
 
@@ -28,12 +28,12 @@ class Service(Beacon):
     graphite_namespace = "<NAME OF MEASURE>"
     expose = ["function_1_exposed", "function_2_exposed"]
 
-    def function_1_exposed(self):
+    def expose_function_1_exposed(self):
         ...
         ...
         ...
 
-    def function_2_exposed(self):
+    def expose_function_2_exposed(self):
         ...
         ...
         ...
@@ -57,3 +57,6 @@ Some features that will be available in a future:
 - Grouped metrics
 - More beacons
 - ...and much more
+
+## Why this name?
+Because of this [video](https://www.youtube.com/watch?v=T4Ox2t5c4As) :P.
