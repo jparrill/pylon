@@ -5,7 +5,7 @@ import time
 import os
 from os.path import realpath
 from os.path import dirname
-from socket import socket
+import socket
 from importlib import import_module
 from beacons import beacon
 
@@ -70,10 +70,12 @@ class BeaconHandler(object):
     def setup_graphite(self):
         # Connect with graphite server
         try:
-            sock = socket.connect(self.server, self.port)
-        except:
+            sock = socket.socket()
+            sock.connect((self.server, int(self.port)))
+        except Exception as error:
             print "Couldn't connect to {} on port {}".format(
                 self.server, self.port)
+            print error
             sys.exit(1)
 
         return sock
@@ -99,7 +101,7 @@ class BeaconHandler(object):
         #     timestamp,
         #     )
         self.conn.sendall ('{} {} {}'.format(
-            path,
+            namespace,
             value,
             timestamp
             )
