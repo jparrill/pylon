@@ -50,6 +50,8 @@ def expose_percent(self):
         )
 ```
 
+Now add the name of your .py file to probe.ini in beacons field...thats it, execute nexus .py and see in graphite your data ;).
+
 ## To much work todo
 Some features that will be available in a future:
 
