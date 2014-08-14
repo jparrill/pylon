@@ -1,6 +1,6 @@
 Pylon
 =====
-Pylon is a moduled colector of system metrics and all that you want to measure, using Graphite as a Backend
+Pylon is a moduled collector of system metrics and all that you want to measure, using Graphite as a Backend
 
 ## Why?
 Because I need an easy way to add some kind of information about all my nodes, starting with the system metrics, but here is the point...you can make your beacon to add any measure that you want...check logs, inodes of the system...is up you.
