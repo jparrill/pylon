@@ -100,7 +100,7 @@ class BeaconHandler(object):
         #     value,
         #     timestamp,
         #     )
-        self.conn.sendall ('{} {} {}'.format(
+        self.conn.sendall ('{} {} {} \n'.format(
             namespace,
             value,
             timestamp
