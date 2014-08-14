@@ -8,6 +8,7 @@ from os.path import dirname
 import socket
 from importlib import import_module
 from beacons import beacon
+import simpledaemon
 
 class BeaconHandler(object):
     '''
@@ -41,12 +42,18 @@ class BeaconHandler(object):
         if not self.hostname:
             self.hostname = socket.gethostname()
 
-        self.graphite_log = config.get('Graphite', 'log_file')
         self.loaded_beacons = config.get('Graphite', 'beacons')
+        self.graphite_log = config.get('Graphite', 'logfile')
+        self.logLevel = config.get('Graphite', 'loglevel')
+        if not self.logLevel:
+            self.logLevel = info
+
+        self.daemonPid = config.get('Graphite', 'pidfile')
 
     def logger(self):
         # Logger function
         log_file = self.graphite_log
+        level = self.logLevel
         logging.getLogger('').handlers = []
         if not os.path.exists(log_file):
             open(log_file, 'a').close()
@@ -73,9 +80,9 @@ class BeaconHandler(object):
             sock = socket.socket()
             sock.connect((self.server, int(self.port)))
         except Exception as error:
-            print "Couldn't connect to {} on port {}".format(
-                self.server, self.port)
-            print error
+            logging.error("Couldn't connect to {} on port {}".format(
+                self.server, self.port))
+            logging.error(error)
             sys.exit(1)
 
         return sock
@@ -94,12 +101,7 @@ class BeaconHandler(object):
             timestamp,
             )
         )
-        
-        # print u'{} {} {}'.format(
-        #     namespace, 
-        #     value,
-        #     timestamp,
-        #     )
+
         self.conn.sendall ('{} {} {} \n'.format(
             namespace,
             value,
@@ -107,7 +109,12 @@ class BeaconHandler(object):
             )
         )
 
-
+        # logging.info(u'{} {} {}'.format(
+                #     namespace,
+                #     value,
+                #     timestamp
+                #     )
+                # )
 
     def run(self):
         # Get data from beacon to notify it to graphite
@@ -130,9 +137,19 @@ class BeaconHandler(object):
     def close_conn(self):
         self.conn.close()
 
+class Nexus(simpledaemon.Daemon):
+    file_path = dirname(realpath(__file__))
+    default_conf = file_path + '/probe.ini'
+    section = 'Graphite'
+
+    def run(self):
+        handler = BeaconHandler()
+        while True:
+            handler.beacon_loader(handler.loaded_beacons)
+            handler.run()
+
+        handler.close_conn()
 
 if __name__ == "__main__":
-    handler = BeaconHandler()
-    handler.beacon_loader(handler.loaded_beacons)
-    handler.run()
-    handler.close_conn()
+    Nexus().main()
+    
