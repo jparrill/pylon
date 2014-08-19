@@ -9,7 +9,7 @@ class Service(Beacon):
     '''
     #name = "Cpu"
     graphite_namespace = "cpu"
-    expose = ['load_5', 'load_10', 'load_15', 'usage']
+    expose = ['load_5', 'usage']
 
     def expose_load_5(self):
         return dict(
@@ -31,6 +31,6 @@ class Service(Beacon):
 
     def expose_usage(self):
         return dict(
-            graphite_namespace="usage",
+            graphite_namespace="usage_percent",
             value=psutil.cpu_percent(interval=1)
         )

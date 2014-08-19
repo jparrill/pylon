@@ -12,7 +12,7 @@ import simpledaemon
 
 class BeaconHandler(object):
     '''
-    This Class will manage all beacons as a manager, register all beacons that
+    This Class will manage all beacons, register all beacons that
     it is in config file and call all of them in a row.
     (not async operations yet)
     '''
@@ -29,13 +29,16 @@ class BeaconHandler(object):
         file_path = dirname(realpath(__file__))
         config = ConfigParser.RawConfigParser()
         try:
-            logging.info('Reading configuration')
+            logging.info('Loading configuration')
             config.read(file_path + '/probe.ini')
-        except:
+        except Exception as err:
             logging.critical('Error reading config file')
+            raise Exception('Error reading config file: %s' % err)
 
+        logging.info('Configuration loaded correctly')
         self.server = config.get('Graphite', 'server')
         self.port = config.get('Graphite', 'port')
+        self.delay = config.get('Graphite', 'delay')
         self.domain = config.get('Graphite', 'domain')
         self.initiative = config.get('Graphite', 'initiative')
         self.hostname = config.get('Graphite', 'hostname')
@@ -101,20 +104,18 @@ class BeaconHandler(object):
             timestamp,
             )
         )
-
-        self.conn.sendall ('{} {} {} \n'.format(
-            namespace,
-            value,
-            timestamp
+        try:
+            self.conn.sendall ('{} {} {} \n'.format(
+                namespace,
+                value,
+                timestamp
+                )
             )
-        )
 
-        # logging.info(u'{} {} {}'.format(
-                #     namespace,
-                #     value,
-                #     timestamp
-                #     )
-                # )
+        except Exception as err:
+            logging.error("Error sending information to graphite: %s" % err)
+            raise Exception('Error sending information to graphite: %s' % err)
+
 
     def run(self):
         # Get data from beacon to notify it to graphite
@@ -138,6 +139,9 @@ class BeaconHandler(object):
         self.conn.close()
 
 class Nexus(simpledaemon.Daemon):
+    '''
+    This Class is a layer over the BeaconHandler to manage software as a daemons
+    '''
     file_path = dirname(realpath(__file__))
     default_conf = file_path + '/probe.ini'
     section = 'Graphite'
@@ -147,6 +151,7 @@ class Nexus(simpledaemon.Daemon):
         while True:
             handler.beacon_loader(handler.loaded_beacons)
             handler.run()
+            time.sleep(int(handler.delay))
 
         handler.close_conn()
 
