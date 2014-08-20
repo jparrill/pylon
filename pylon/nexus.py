@@ -112,6 +112,12 @@ class BeaconHandler(object):
                 )
             )
 
+            # print '{} {} {} \n'.format(
+            #     namespace,
+            #     value,
+            #     timestamp
+            #     )
+
         except Exception as err:
             logging.error("Error sending information to graphite: %s" % err)
             raise Exception('Error sending information to graphite: %s' % err)
