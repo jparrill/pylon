@@ -11,11 +11,10 @@ class Service(Beacon):
 
     def expose_percent_usage(self):
         data = []
-        name = 'percent_usage'
+        namespace = 'percent_usage'
         for part in psutil.disk_partitions():
             partitions = {}
-            temp_device = self.format(part.device, name)
-            print temp_device
+            temp_device = self.format(part.device, namespace)
             partitions[temp_device] = psutil.disk_usage(part.mountpoint).percent
             data.append(partitions)
 

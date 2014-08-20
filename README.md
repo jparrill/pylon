@@ -50,6 +50,29 @@ def expose_percent(self):
         )
 ```
 
+or a list of dicts, the key of every dicts will be the 'graphite_namespace' and the value will be 'value'. This is ussefull in checks like HDD usage or
+something like that which involves multiple values per check. (EG):
+
+```python
+def expose_percent_usage(self):
+        data = []
+        namespace = 'percent_usage'
+        for part in psutil.disk_partitions():
+            partitions = {}
+            temp_device = self.format(part.device, namespace)
+            partitions[temp_device] = psutil.disk_usage(part.mountpoint).percent
+            data.append(partitions)
+
+        return data
+```
+
+This data goes to graphite (multiple partitions are allowed, but not in this example):
+
+```sh
+m2m.smart.test_node.disk.disk0s2_percent_usage 80.9 1408574194
+m2m.smart.test_node.disk.disk0s2_percent_usage 80.9 1408574200
+```
+
 Now add the name of your .py file to probe.ini in beacons field...thats it, execute nexus .py and see in graphite your data ;).
 
 ## To much work todo
