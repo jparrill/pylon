@@ -75,12 +75,12 @@ m2m.smart.test_node.disk.disk0s2_percent_usage 80.9 1408574200
 
 Now add the name of your .py file to probe.ini in beacons field...thats it, execute nexus .py and see in graphite your data ;).
 
-## To much work todo
+## Too much work todo
 Some features that will be available in a future:
 
-- Daemon mode
 - Grouped metrics
 - More beacons
+- Fix tons of bugs
 - ...and much more
 
 ## Why this name?
