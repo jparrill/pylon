@@ -15,7 +15,9 @@ class Service(Beacon):
         for part in psutil.disk_partitions():
             partitions = {}
             temp_device = self.format(part.device, namespace)
-            partitions[temp_device] = psutil.disk_usage(part.mountpoint).percent
+            partitions[temp_device] = psutil.disk_usage(
+                part.mountpoint
+                ).percent
             data.append(partitions)
 
         return data

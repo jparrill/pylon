@@ -14,15 +14,23 @@ class Beacon(object):
             if method:  # Handle unexistant method!
                 data = method()
                 if type(data) is dict:
-                    namespace = self.join_namespaces(data['graphite_namespace'])
+                    namespace = self.join_namespaces(
+                        data['graphite_namespace']
+                        )
                     data['graphite_namespace'] = namespace
                     yield data
 
                 elif type(data) is list:
                     for inner_data in data:
                         new_data = {}
-                        new_data['graphite_namespace'] = str(inner_data.keys()).strip('[]\'')
-                        new_data['value'] = str(inner_data.values()).strip('[]')
-                        namespace = self.join_namespaces(new_data['graphite_namespace'])
+                        new_data['graphite_namespace'] = str(
+                            inner_data.keys()).strip('[]\''
+                            )
+                        new_data['value'] = str(
+                            inner_data.values()
+                            ).strip('[]')
+                        namespace = self.join_namespaces(
+                            new_data['graphite_namespace']
+                            )
                         new_data['graphite_namespace'] = namespace
                         yield new_data
