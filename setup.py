@@ -20,7 +20,7 @@ def get_version(package):
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-package = 'pylon-'
+package = 'pylon'
 version = get_version(package)
 
 if sys.argv[-1] == 'publish':
@@ -32,7 +32,7 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 setup(
-    name = "pylon",
+    name = "pyl0n",
     version = version,
     author = "Juan Manuel Parrilla Madrid",
     author_email = "padajuan@gmail.com",
