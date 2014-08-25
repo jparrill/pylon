@@ -20,7 +20,7 @@ setup(
     packages=['pylon'],
     long_description=read('README.md'),
     classifiers=[
-        'Development Status :: 1 - Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Intended Audience :: DevOps',
         'License :: OSI Approved :: GPLv2 License',
