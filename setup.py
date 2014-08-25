@@ -1,5 +1,7 @@
 import os
 from setuptools import setup
+import re
+import sys
 
 # Utility function to read the README file.
 # Used for the long_description.  It's nice, because now 1) we have a top level
@@ -18,6 +20,7 @@ def get_version(package):
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+package = 'pylon'
 version = get_version(package)
 
 if sys.argv[-1] == 'publish':
