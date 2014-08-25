@@ -39,7 +39,7 @@ setup(
     description = ("Use psutils to send data to Graphite Backend"),
     license = "GPLv2",
     keywords = "psutil pylon monitoring graphite",
-    url = "http://packages.python.org/pylon",
+    url = "https://github.com/padajuan/pylon",
     include_package_data=True,
     packages=['pylon'],
     install_requires=open('requirements.txt').read().split('\n'),
