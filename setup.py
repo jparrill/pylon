@@ -18,7 +18,7 @@ setup(
     keywords = "psutil pylon monitoring graphite",
     url = "http://packages.python.org/pylon",
     packages=['pylon'],
-    long_description=read('README'),
+    long_description=read('README.md'),
     classifiers=[
         'Development Status :: 1 - Alpha',
         'Environment :: Console',
