@@ -22,7 +22,8 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
-        'Intended Audience :: DevOps',
+        'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
         'License :: OSI Approved :: GPLv2 License',
         'Operating System :: Redhat/CentOS/Fedora',
         'Programming Language :: Python',
