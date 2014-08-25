@@ -5,18 +5,39 @@ from setuptools import setup
 # Used for the long_description.  It's nice, because now 1) we have a top level
 # README file and 2) it's easier to type in the README file than to put a raw
 # string in below ...
+
+def get_version(package):
+    """
+    Return package version as listed in `__version__` in `init.py`.
+    """
+    init_py = open(os.path.join(package, '__init__.py')).read()
+    return re.search(
+        "^__version__ = ['\"]([^'\"]+)['\"]",
+        init_py, re.MULTILINE).group(1)
+
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+version = get_version(package)
+
+if sys.argv[-1] == 'publish':
+    os.system("python setup.py sdist upload")
+    args = {'version': version}
+    print("You probably want to also tag the version now:")
+    print("  git tag -a %(version)s -m 'version %(version)s'" % args)
+    print("  git push --tags")
+    sys.exit()
+
 setup(
     name = "pylon",
-    version = "0.0.1",
+    version = version,
     author = "Juan Manuel Parrilla Madrid",
     author_email = "padajuan@gmail.com",
     description = ("Use psutils to send data to Graphite Backend"),
     license = "GPLv2",
     keywords = "psutil pylon monitoring graphite",
     url = "http://packages.python.org/pylon",
+    include_package_data=True,
     packages=['pylon'],
     long_description=read('README.md'),
     classifiers=[
