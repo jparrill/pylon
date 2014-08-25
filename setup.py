@@ -24,9 +24,10 @@ setup(
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
-        'License :: OSI Approved :: GPLv2 License',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: Redhat/CentOS/Fedora',
-        'Programming Language :: Python',
-        "Topic :: Monitoring",
+        'Operating System :: POSIX :: Linux',
+        'Topic :: Monitoring',
+        'Topic :: System :: Operating System',
     ],
 )
