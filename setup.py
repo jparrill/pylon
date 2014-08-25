@@ -26,7 +26,7 @@ setup(
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: POSIX :: Linux',
-        'Topic :: Monitoring',
+        'Topic :: System :: Monitoring',
         'Topic :: System :: Operating System',
     ],
 )
