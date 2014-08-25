@@ -18,6 +18,13 @@ python nexus.py --stop
 
 The name of beacon that you will to load, must be the filename
 
+## How to install
+Just type this:
+
+```sh
+pip install pyl0n
+```
+
 ## Make your own Beacon
 Make a .py file inside of a beacons folder and create the Class "Service" inheriting from Beacon Class:
 
