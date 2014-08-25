@@ -25,7 +25,6 @@ setup(
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
-        'Operating System :: Redhat/CentOS/Fedora',
         'Operating System :: POSIX :: Linux',
         'Topic :: Monitoring',
         'Topic :: System :: Operating System',
