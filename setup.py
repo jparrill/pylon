@@ -17,9 +17,6 @@ def get_version(package):
         "^__version__ = ['\"]([^'\"]+)['\"]",
         init_py, re.MULTILINE).group(1)
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
 package = 'pylon'
 version = get_version(package)
 
@@ -43,7 +40,7 @@ setup(
     include_package_data=True,
     packages=find_packages(),
     install_requires=open('requirements.txt').read().split('\n'),
-    long_description=read('README.md'),
+    long_description='README.md',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
