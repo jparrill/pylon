@@ -1,2 +1,2 @@
-psutil==2.1.1
+psutil==4.4.2
 SimpleDaemon==1.3.0
